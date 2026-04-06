@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract MEVBot {
 
