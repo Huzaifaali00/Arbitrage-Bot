@@ -1,501 +1,324 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import {IPoolAddressesProvider, IPool, IFlashLoanSimpleReceiver} from "./interfaces/IAave.sol";
+import {IDEXAdapter, SwapParams, SwapResult} from "./adapters/IDEXAdapter.sol";
+import {DEXRegistry} from "./DEXRegistry.sol";
+
+// Minimal interface for Uniswap V3 Pool
+interface IUniswapV3Minimal {
+    function token0() external view returns (address);
+    function token1() external view returns (address);
+}
+
+// Minimal interface for ArbitrageVault
+interface IArbitrageVault {
+    function distributeProfit(uint256 amount) external;
+}
+
 /**
  * @title ArbitrageBot
- * @notice Enhanced MEV arbitrage bot with security hardening
- * @dev Supports multi-hop arbitrage on Uniswap V3 with sandwich attack capabilities
+ * @notice Advanced profit-to-stablecoin back-run and multi-hop arbitrage executor
+ * @dev Integrated with Aave V3 for capital-free trading.
+ *      Automatically converts all arbitrage profit into USDC/USDT.
  */
-contract ArbitrageBot is ReentrancyGuard, Ownable {
-    
+contract ArbitrageBot is ReentrancyGuard, Ownable, IFlashLoanSimpleReceiver {
+    using SafeERC20 for IERC20;
+
     // ============ Constants ============
-    uint160 internal constant MIN_SQRT_RATIO = 4295128739;
-    uint160 internal constant MAX_SQRT_RATIO = 1461446703485210103287273052203988822378723970342;
-    
-    uint256 private constant MAX_HOPS = 10; // Prevent unbounded gas consumption
-    
+    uint256 public constant MAX_SLIPPAGE_BPS = 500; // 5%
+
     // ============ State Variables ============
-    
-    /// @notice Tracks total profit accumulated per token
-    mapping(address => uint256) public totalProfit;
-    
-    /// @notice Approved pool addresses for trading
-    mapping(address => bool) public approvedPools;
-    
-    /// @notice Approved tokens for trading
-    mapping(address => bool) public approvedTokens;
-    
-    /// @notice Whether contract is paused (emergency stop)
-    bool public paused;
-    
-    /// @notice Pending owner for two-step ownership transfer
+    IPoolAddressesProvider public immutable poolAddressesProvider;
+    IERC20 public immutable stablecoin;
+    DEXRegistry public registry;
+    address public vaultAddress;
     address public pendingOwner;
-    
+
+    mapping(DEXRegistry.DEXType => IDEXAdapter) public adapters;
+
     // ============ Events ============
-    
-    event SandwichExecuted(
-        address indexed pool,
-        bool zeroForOne,
-        int256 amountIn,
-        uint256 profitMade,
-        uint256 builderTip
-    );
-    
-    event ArbExecuted(
-        uint256 hopsLength,
-        address indexed tokenIn,
-        int256 amountIn,
-        uint256 profitMade,
-        uint256 builderTip
-    );
-    
-    event ProfitWithdrawn(address indexed token, uint256 amount);
-    event ETHWithdrawn(uint256 amount);
-    event PoolApproved(address indexed pool);
-    event PoolRevoked(address indexed pool);
-    event TokenApproved(address indexed token);
-    event TokenRevoked(address indexed token);
-    event Paused();
-    event Unpaused();
-    
-    // ============ Modifiers ============
-    
-    modifier whenNotPaused() {
-        require(!paused, "ArbitrageBot: contract is paused");
-        _;
-    }
-    
-    modifier onlyApprovedPool(address pool) {
-        require(approvedPools[pool], "ArbitrageBot: pool not approved");
-        _;
-    }
-    
-    modifier onlyApprovedToken(address token) {
-        require(approvedTokens[token], "ArbitrageBot: token not approved");
-        _;
-    }
-    
+    event BackrunExecuted(address indexed pool, uint256 profitUSDC);
+    event ArbExecuted(uint256 profitUSDC);
+    event ProfitConverted(address indexed token, uint256 amountIn, uint256 amountOutUSDC);
+    event AdapterSet(DEXRegistry.DEXType indexed dexType, address adapter);
+    event VaultSet(address vault);
+    event RegistrySet(address registry);
+
     // ============ Constructor ============
-    
-    constructor() Ownable(msg.sender) {
-        paused = false;
+    constructor(
+        IPoolAddressesProvider _provider,
+        address _vault,
+        address _registry,
+        address _stablecoin
+    ) Ownable(msg.sender) {
+        poolAddressesProvider = _provider;
+        vaultAddress = _vault;
+        registry = DEXRegistry(_registry);
+        stablecoin = IERC20(_stablecoin);
     }
-    
+
     // ============ Admin Functions ============
-    
-    /**
-     * @notice Add a pool to the whitelist
-     * @param pool Address of Uniswap V3 pool
-     */
-    function approvePool(address pool) external onlyOwner {
-        require(pool != address(0), "ArbitrageBot: invalid pool address");
-        require(!approvedPools[pool], "ArbitrageBot: pool already approved");
-        
-        // Basic validation - check if pool has necessary functions
-        // This is a basic check; more rigorous validation could be added
-        try IUniswapV3Pool(pool).factory() {} catch {
-            revert("ArbitrageBot: invalid Uniswap V3 pool");
-        }
-        
-        approvedPools[pool] = true;
-        emit PoolApproved(pool);
+
+    function setAdapter(DEXRegistry.DEXType dexType, address adapter) external onlyOwner {
+        require(adapter != address(0), "Zero address");
+        adapters[dexType] = IDEXAdapter(adapter);
+        emit AdapterSet(dexType, adapter);
     }
-    
-    /**
-     * @notice Remove a pool from the whitelist
-     * @param pool Address of Uniswap V3 pool
-     */
-    function revokePool(address pool) external onlyOwner {
-        require(approvedPools[pool], "ArbitrageBot: pool not approved");
-        approvedPools[pool] = false;
-        emit PoolRevoked(pool);
+
+    function setVaultAddress(address vault) external onlyOwner {
+        require(vault != address(0), "Zero address");
+        vaultAddress = vault;
+        emit VaultSet(vault);
     }
-    
-    /**
-     * @notice Add a token to the whitelist
-     * @param token Address of ERC20 token
-     */
-    function approveToken(address token) external onlyOwner {
-        require(token != address(0), "ArbitrageBot: invalid token address");
-        require(!approvedTokens[token], "ArbitrageBot: token already approved");
-        
-        // Validate token has transfer function
-        try IERC20(token).balanceOf(address(this)) {} catch {
-            revert("ArbitrageBot: invalid ERC20 token");
-        }
-        
-        approvedTokens[token] = true;
-        emit TokenApproved(token);
+
+    function setRegistry(address _registry) external onlyOwner {
+        require(_registry != address(0), "Zero address");
+        registry = DEXRegistry(_registry);
+        emit RegistrySet(_registry);
     }
-    
-    /**
-     * @notice Remove a token from the whitelist
-     * @param token Address of ERC20 token
-     */
-    function revokeToken(address token) external onlyOwner {
-        require(approvedTokens[token], "ArbitrageBot: token not approved");
-        approvedTokens[token] = false;
-        emit TokenRevoked(token);
-    }
-    
-    /**
-     * @notice Emergency pause function
-     */
-    function pause() external onlyOwner {
-        require(!paused, "ArbitrageBot: already paused");
-        paused = true;
-        emit Paused();
-    }
-    
-    /**
-     * @notice Unpause contract
-     */
-    function unpause() external onlyOwner {
-        require(paused, "ArbitrageBot: already unpaused");
-        paused = false;
-        emit Unpaused();
-    }
-    
-    // ============ Ownership Transfer (Two-Step) ============
-    
-    /**
-     * @notice Initiate ownership transfer
-     * @param newOwner Address of new owner
-     */
-    function transferOwnership(address newOwner) public override onlyOwner {
-        require(newOwner != address(0), "ArbitrageBot: invalid new owner");
-        pendingOwner = newOwner;
-    }
-    
-    /**
-     * @notice Accept ownership transfer (must be called by pendingOwner)
-     */
-    function acceptOwnership() external {
-        require(msg.sender == pendingOwner, "ArbitrageBot: only pending owner can accept");
-        address oldOwner = owner();
-        _transferOwnership(msg.sender);
-        pendingOwner = address(0);
-    }
-    
-    // ============ Core Trading Functions ============
-    
-    struct SandwichParams {
+
+    // ============ Core Trading — Back-Run ============
+
+    struct BackrunParams {
         address pool;
         bool zeroForOne;
-        int256 amountIn;
-        uint256 minimumProfit;
-        uint256 builderTip;
+        uint256 amountIn;
+        uint256 minProfitUSDC;
         uint256 deadline;
+        bool useFlashLoan;
     }
-    
-    /**
-     * @notice Execute sandwich attack on Uniswap V3
-     * @dev Front-run, piggyback, and back-run large swap
-     * @param params SandwichParams struct containing trade parameters
-     */
-    function executeSandwich(SandwichParams calldata params) 
-        external 
-        onlyOwner 
-        whenNotPaused 
-        nonReentrant 
-        onlyApprovedPool(params.pool)
-    {
-        // Input validation
-        require(params.amountIn > 0, "ArbitrageBot: amountIn must be positive");
-        require(params.deadline >= block.timestamp, "ArbitrageBot: transaction expired");
-        require(params.minimumProfit > 0, "ArbitrageBot: minimum profit must be positive");
-        
-        // Get input token
-        address tokenIn = params.zeroForOne
-            ? IUniswapV3Pool(params.pool).token0()
-            : IUniswapV3Pool(params.pool).token1();
-        
-        require(approvedTokens[tokenIn], "ArbitrageBot: input token not approved");
-        
-        // Record balance before swap
-        uint256 balanceBefore = IERC20(tokenIn).balanceOf(address(this));
-        
-        // FRONT-RUN: First swap to establish position
-        (int256 amount0, int256 amount1) = IUniswapV3Pool(params.pool).swap(
-            address(this),
-            params.zeroForOne,
-            params.amountIn,
-            params.zeroForOne ? MIN_SQRT_RATIO + 1 : MAX_SQRT_RATIO - 1,
-            abi.encode(params.pool, params.deadline)
-        );
-        
-        // Calculate amount received from first swap
-        int256 amountReceived = params.zeroForOne ? -amount1 : -amount0;
-        require(amountReceived > 0, "ArbitrageBot: front-run yielded no output");
-        
-        // BACK-RUN: Second swap to close position
-        IUniswapV3Pool(params.pool).swap(
-            address(this),
-            !params.zeroForOne,
-            amountReceived,
-            !params.zeroForOne ? MIN_SQRT_RATIO + 1 : MAX_SQRT_RATIO - 1,
-            abi.encode(params.pool, params.deadline)
-        );
-        
-        // Validate profit
-        uint256 balanceAfter = IERC20(tokenIn).balanceOf(address(this));
-        require(
-            balanceAfter >= balanceBefore + params.minimumProfit,
-            "ArbitrageBot: insufficient profit from sandwich"
-        );
-        
-        // Calculate and track profit
-        uint256 profit = balanceAfter - balanceBefore;
-        totalProfit[tokenIn] += profit;
-        
-        // Send builder tip using safe call pattern
-        if (params.builderTip > 0) {
-            _sendETH(block.coinbase, params.builderTip);
+
+    function executeBackrun(BackrunParams calldata params) external onlyOwner nonReentrant {
+        if (params.useFlashLoan) {
+            address tokenIn = params.zeroForOne 
+                ? IUniswapV3Minimal(params.pool).token0() 
+                : IUniswapV3Minimal(params.pool).token1();
+            
+            bytes memory data = abi.encode("BACKRUN", params);
+            IPool(poolAddressesProvider.getPool()).flashLoanSimple(
+                address(this),
+                tokenIn,
+                params.amountIn,
+                data,
+                0
+            );
+        } else {
+            _executeBackrunInternal(params);
         }
-        
-        emit SandwichExecuted(
-            params.pool,
-            params.zeroForOne,
-            params.amountIn,
-            profit,
-            params.builderTip
-        );
     }
-    
+
+    function _executeBackrunInternal(BackrunParams memory params) internal {
+        DEXRegistry.PoolInfo memory info = registry.getPoolInfo(params.pool);
+        require(info.isActive, "Pool not active");
+        
+        IDEXAdapter adapter = adapters[info.dexType];
+        require(address(adapter) != address(0), "Adapter not set");
+
+        address tokenIn = params.zeroForOne ? info.token0 : info.token1;
+        address tokenOut = params.zeroForOne ? info.token1 : info.token0;
+
+        uint256 balBefore = IERC20(tokenOut).balanceOf(address(this));
+
+        // Grant allowance to adapter
+        IERC20(tokenIn).forceApprove(address(adapter), params.amountIn);
+
+        SwapParams memory swapParams = SwapParams({
+            tokenIn: tokenIn,
+            tokenOut: tokenOut,
+            amountIn: params.amountIn,
+            minAmountOut: 1, // Will verify profit in USDC
+            data: abi.encode(params.pool),
+            deadline: params.deadline
+        });
+
+        adapter.swap(swapParams);
+
+        uint256 amountOut = IERC20(tokenOut).balanceOf(address(this)) - balBefore;
+        
+        uint256 profitUSDC = _convertToUSDC(tokenOut, amountOut);
+        require(profitUSDC >= params.minProfitUSDC, "Insufficient USDC profit");
+
+        emit BackrunExecuted(params.pool, profitUSDC);
+    }
+
+    // ============ Aave Callback ============
+
+    function executeOperation(
+        address asset,
+        uint256 amount,
+        uint256 premium,
+        address initiator,
+        bytes calldata params
+    ) external override returns (bool) {
+        require(msg.sender == poolAddressesProvider.getPool(), "Only Aave");
+        require(initiator == address(this), "ArbitrageBot: unauthorized initiator");
+        
+        (string memory action, bytes memory data) = abi.decode(params, (string, bytes));
+        
+        if (keccak256(abi.encodePacked(action)) == keccak256(abi.encodePacked("BACKRUN"))) {
+            BackrunParams memory bParams = abi.decode(data, (BackrunParams));
+            _executeBackrunInternal(bParams);
+        } else if (keccak256(abi.encodePacked(action)) == keccak256(abi.encodePacked("ARB"))) {
+            MultiHopArbParams memory aParams = abi.decode(data, (MultiHopArbParams));
+            _executeMultiHopArbInternal(aParams);
+        }
+
+        uint256 amountToReturn = amount + premium;
+        IERC20(asset).forceApprove(msg.sender, amountToReturn);
+        
+        return true;
+    }
+
+    function ADDRESSES_PROVIDER() external view override returns (address) {
+        return address(poolAddressesProvider);
+    }
+
+    function POOL() external view override returns (address) {
+        return poolAddressesProvider.getPool();
+    }
+
+    // ============ Multi-Hop Arbitrage ============
+
     struct ArbHop {
         address pool;
         bool zeroForOne;
     }
-    
+
     struct MultiHopArbParams {
         ArbHop[] hops;
         address tokenIn;
-        int256 amountIn;
-        uint256 minimumProfit;
-        uint256 builderTip;
+        uint256 amountIn;
+        uint256 minProfitUSDC;
         uint256 deadline;
+        bool useFlashLoan;
     }
-    
-    /**
-     * @notice Execute multi-hop arbitrage across multiple pools
-     * @param params MultiHopArbParams struct containing arbitrage parameters
-     */
-    function executeMultiHopArb(MultiHopArbParams calldata params)
-        external
-        onlyOwner
-        whenNotPaused
-        nonReentrant
-        onlyApprovedToken(params.tokenIn)
-    {
-        // Input validation
-        require(params.hops.length > 0, "ArbitrageBot: no hops provided");
-        require(params.hops.length <= MAX_HOPS, "ArbitrageBot: too many hops");
-        require(params.amountIn > 0, "ArbitrageBot: amountIn must be positive");
-        require(params.deadline >= block.timestamp, "ArbitrageBot: transaction expired");
-        require(params.minimumProfit > 0, "ArbitrageBot: minimum profit must be positive");
-        
-        // Validate all pools are approved
-        for (uint256 i = 0; i < params.hops.length; i++) {
-            require(approvedPools[params.hops[i].pool], "ArbitrageBot: pool not approved");
-        }
-        
-        // Record balance before swaps
-        uint256 balanceBefore = IERC20(params.tokenIn).balanceOf(address(this));
-        
-        // Execute each hop
-        int256 currentAmountIn = params.amountIn;
-        
-        for (uint256 i = 0; i < params.hops.length; i++) {
-            (int256 amount0, int256 amount1) = IUniswapV3Pool(params.hops[i].pool).swap(
+
+    function executeMultiHopArb(MultiHopArbParams calldata params) external onlyOwner nonReentrant {
+        require(params.hops.length > 0, "ArbitrageBot: no hops");
+        if (params.useFlashLoan) {
+            bytes memory data = abi.encode("ARB", params);
+            IPool(poolAddressesProvider.getPool()).flashLoanSimple(
                 address(this),
-                params.hops[i].zeroForOne,
-                currentAmountIn,
-                params.hops[i].zeroForOne ? MIN_SQRT_RATIO + 1 : MAX_SQRT_RATIO - 1,
-                abi.encode(params.hops[i].pool, params.deadline)
+                params.tokenIn,
+                params.amountIn,
+                data,
+                0
             );
-            
-            // Calculate amount for next hop
-            int256 amountOut = params.hops[i].zeroForOne ? -amount1 : -amount0;
-            require(amountOut > 0, "ArbitrageBot: hop yielded no output");
-            
-            currentAmountIn = amountOut;
+        } else {
+            _executeMultiHopArbInternal(params);
         }
-        
-        // Validate final profit
-        uint256 balanceAfter = IERC20(params.tokenIn).balanceOf(address(this));
-        require(
-            balanceAfter >= balanceBefore + params.minimumProfit,
-            "ArbitrageBot: insufficient arb profit"
-        );
-        
-        // Calculate and track profit
-        uint256 profit = balanceAfter - balanceBefore;
-        totalProfit[params.tokenIn] += profit;
-        
-        // Send builder tip using safe call pattern
-        if (params.builderTip > 0) {
-            _sendETH(block.coinbase, params.builderTip);
-        }
-        
-        emit ArbExecuted(
-            params.hops.length,
-            params.tokenIn,
-            params.amountIn,
-            profit,
-            params.builderTip
-        );
     }
-    
-    // ============ Callback Handler ============
-    
-    /**
-     * @notice Uniswap V3 swap callback - handles token transfer
-     * @dev Called by IUniswapV3Pool after swap is executed
-     */
+
+    function _executeMultiHopArbInternal(MultiHopArbParams memory params) internal {
+        uint256 balBefore = IERC20(params.tokenIn).balanceOf(address(this));
+        uint256 currentAmount = params.amountIn;
+        address currentToken = params.tokenIn;
+
+        for (uint256 i = 0; i < params.hops.length; i++) {
+            DEXRegistry.PoolInfo memory info = registry.getPoolInfo(params.hops[i].pool);
+            IDEXAdapter adapter = adapters[info.dexType];
+            
+            address nextToken = params.hops[i].zeroForOne ? info.token1 : info.token0;
+            
+            IERC20(currentToken).forceApprove(address(adapter), currentAmount);
+            
+            SwapResult memory res = adapter.swap(SwapParams({
+                tokenIn: currentToken,
+                tokenOut: nextToken,
+                amountIn: currentAmount,
+                minAmountOut: 1,
+                data: abi.encode(params.hops[i].pool),
+                deadline: params.deadline
+            }));
+            
+            currentAmount = res.amountOut;
+            currentToken = nextToken;
+        }
+
+        uint256 balAfter = IERC20(params.tokenIn).balanceOf(address(this));
+        require(balAfter > balBefore, "ArbitrageBot: no profit");
+        uint256 profit = balAfter - balBefore;
+        uint256 profitUSDC = _convertToUSDC(params.tokenIn, profit);
+        require(profitUSDC >= params.minProfitUSDC, "Insufficient USDC profit");
+        emit ArbExecuted(profitUSDC);
+    }
+
+    // ============ Helper: Convert to Stablecoin ============
+
+    function _convertToUSDC(address token, uint256 amount) internal returns (uint256) {
+        if (token == address(stablecoin)) return amount;
+        if (amount == 0) return 0;
+
+        IDEXAdapter v3 = adapters[DEXRegistry.DEXType.UniswapV3];
+        if (address(v3) == address(0)) return 0;
+
+        uint256 balBefore = stablecoin.balanceOf(address(this));
+        
+        IERC20(token).forceApprove(address(v3), amount);
+        
+        try v3.swap(SwapParams({
+            tokenIn: token,
+            tokenOut: address(stablecoin),
+            amountIn: amount,
+            minAmountOut: 1,
+            data: abi.encode(address(0)),
+            deadline: block.timestamp + 600
+        })) {
+            uint256 received = stablecoin.balanceOf(address(this)) - balBefore;
+            emit ProfitConverted(token, amount, received);
+            return received;
+        } catch {
+            return 0;
+        }
+    }
+
+    // ============ Uniswap V3 Callback ============
+
     function uniswapV3SwapCallback(
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata data
     ) external {
-        // Decode callback data
-        (address pool, uint256 deadline) = abi.decode(data, (address, uint256));
-        
-        // Validate callback requirements
-        require(msg.sender == pool, "ArbitrageBot: callback from unauthorized address");
-        require(approvedPools[pool], "ArbitrageBot: callback from unapproved pool");
-        require(deadline >= block.timestamp, "ArbitrageBot: callback expired");
-        require(amount0Delta > 0 || amount1Delta > 0, "ArbitrageBot: invalid delta");
-        
-        // Transfer appropriate token amount
-        if (amount0Delta > 0) {
-            address token0 = IUniswapV3Pool(pool).token0();
-            require(approvedTokens[token0], "ArbitrageBot: token0 not approved");
-            IERC20(token0).transfer(msg.sender, uint256(amount0Delta));
-        }
-        
-        if (amount1Delta > 0) {
-            address token1 = IUniswapV3Pool(pool).token1();
-            require(approvedTokens[token1], "ArbitrageBot: token1 not approved");
-            IERC20(token1).transfer(msg.sender, uint256(amount1Delta));
+        // Simple callback implementation
+        if (amount0Delta > 0 || amount1Delta > 0) {
+           // Standard transfer to pool if needed (already handled by adapter usually)
         }
     }
-    
-    // ============ Withdrawal Functions ============
-    
+
+    // ============ Administrative ============
+
     /**
-     * @notice Withdraw accumulated profit for a token
-     * @param token Address of token to withdraw
+     * @notice Push accumulated USDC profit to the ArbitrageVault for distribution.
+     * @param amount Amount in USDC units (6 decimals on Base).
      */
-    function withdrawProfit(address token) external onlyOwner nonReentrant {
-        require(token != address(0), "ArbitrageBot: invalid token");
+    function distributeToVault(uint256 amount) external onlyOwner nonReentrant {
+        require(amount > 0, "Zero amount");
+        require(stablecoin.balanceOf(address(this)) >= amount, "Insufficient balance");
         
-        uint256 amount = totalProfit[token];
-        require(amount > 0, "ArbitrageBot: no profit to withdraw");
-        
-        totalProfit[token] = 0;
-        
-        bool success = IERC20(token).transfer(owner(), amount);
-        require(success, "ArbitrageBot: token transfer failed");
-        
-        emit ProfitWithdrawn(token, amount);
+        stablecoin.forceApprove(vaultAddress, amount);
+        IArbitrageVault(vaultAddress).distributeProfit(amount);
     }
-    
-    /**
-     * @notice Withdraw all funds of a token (including non-profit balance)
-     * @param token Address of token to withdraw
-     */
-    function withdrawAll(address token) external onlyOwner nonReentrant {
-        require(token != address(0), "ArbitrageBot: invalid token");
-        
+
+    function withdrawProfit(address token) external onlyOwner {
         uint256 amount = IERC20(token).balanceOf(address(this));
-        require(amount > 0, "ArbitrageBot: no balance to withdraw");
-        
-        // Reset profit tracking for this token
-        totalProfit[token] = 0;
-        
-        bool success = IERC20(token).transfer(owner(), amount);
-        require(success, "ArbitrageBot: token transfer failed");
-        
-        emit ProfitWithdrawn(token, amount);
+        IERC20(token).safeTransfer(owner(), amount);
     }
-    
-    /**
-     * @notice Withdraw accumulated ETH
-     */
-    function withdrawETH() external onlyOwner nonReentrant {
-        uint256 amount = address(this).balance;
-        require(amount > 0, "ArbitrageBot: no ETH to withdraw");
-        
-        _sendETH(owner(), amount);
-        
-        emit ETHWithdrawn(amount);
+
+    function transferOwnership(address newOwner) public override onlyOwner {
+        pendingOwner = newOwner;
     }
-    
-    // ============ Helper Functions ============
-    
-    /**
-     * @notice Safe ETH transfer using call pattern
-     * @dev Prevents issues with smart wallets and multisigs
-     */
-    function _sendETH(address recipient, uint256 amount) internal {
-        (bool success, ) = payable(recipient).call{value: amount}("");
-        require(success, "ArbitrageBot: ETH transfer failed");
+
+    function acceptOwnership() external {
+        require(msg.sender == pendingOwner, "Not pending owner");
+        _transferOwnership(msg.sender);
+        pendingOwner = address(0);
     }
-    
-    // ============ Receive Functions ============
-    
+
     receive() external payable {}
-    
-    fallback() external payable {}
-    
-    // ============ View Functions ============
-    
-    /**
-     * @notice Get total profit for a token
-     * @param token Address of token
-     * @return Accumulated profit amount
-     */
-    function getProfitFor(address token) external view returns (uint256) {
-        return totalProfit[token];
-    }
-    
-    /**
-     * @notice Check if pool is approved
-     * @param pool Address of pool
-     * @return True if pool is approved
-     */
-    function isPoolApproved(address pool) external view returns (bool) {
-        return approvedPools[pool];
-    }
-    
-    /**
-     * @notice Check if token is approved
-     * @param token Address of token
-     * @return True if token is approved
-     */
-    function isTokenApproved(address token) external view returns (bool) {
-        return approvedTokens[token];
-    }
-    
-    /**
-     * @notice Get current ETH balance
-     * @return ETH balance in wei
-     */
-    function getETHBalance() external view returns (uint256) {
-        return address(this).balance;
-    }
-    
-    /**
-     * @notice Get token balance
-     * @param token Address of token
-     * @return Token balance
-     */
-    function getTokenBalance(address token) external view returns (uint256) {
-        return IERC20(token).balanceOf(address(this));
-    }
 }

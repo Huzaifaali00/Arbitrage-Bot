@@ -1,0 +1,1 @@
+2026-04-25 01:55:02 [ERROR]: Uncaught exception {"error":{"code":"EADDRINUSE","errno":-98,"syscall":"listen","address":"127.0.0.1","port":3000}}

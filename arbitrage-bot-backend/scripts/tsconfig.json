@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node16",
+    "lib": ["ES2020"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "baseUrl": "../arbitrage-bot-backend/node_modules",
+    "typeRoots": ["../arbitrage-bot-backend/node_modules/@types"]
+  },
+  "include": ["./**/*.ts"]
+}

@@ -1,0 +1,564 @@
+2026-04-17 00:17:40 [32minfo[39m: StorageService: Database initialised
+2026-04-17 00:17:40 [32minfo[39m: NotificationService: VAPID details set for Web Push
+2026-04-17 00:17:40 [32minfo[39m: PoolDiscoveryService initialized
+2026-04-17 00:17:40 [32minfo[39m: TransactionSubmitter initialized with valid signer
+2026-04-17 00:17:40 [32minfo[39m: Database schema initialized
+2026-04-17 00:17:40 [32minfo[39m: ProfitTracker initialized
+2026-04-17 00:17:40 [32minfo[39m: Express routes configured
+2026-04-17 00:17:40 [32minfo[39m: WebSocket handlers configured
+2026-04-17 00:17:40 [32minfo[39m: VaultService initialised
+2026-04-17 00:17:40 [32minfo[39m: ArbitrageBot initialised
+2026-04-17 00:17:40 [32minfo[39m: Starting ArbitrageBot…
+2026-04-17 00:17:40 [31merror[39m: Uncaught exception
+1776367060862 [32minfo[39m: Uncaught: Unexpected server response: 405
+2026-04-17 00:17:41 [32minfo[39m: Connected to network
+2026-04-17 00:17:42 [32minfo[39m: Starting monitoring for 0 pools
+2026-04-17 00:17:42 [32minfo[39m: Event listeners attached to all pools
+2026-04-17 00:17:42 [32minfo[39m: Starting PoolDiscoveryService...
+2026-04-17 00:17:43 [32minfo[39m: PoolDiscoveryService started successfully
+2026-04-17 00:17:43 [32minfo[39m: VaultService started
+2026-04-17 00:17:43 [32minfo[39m: Execution loop started
+2026-04-17 00:17:43 [32minfo[39m: Metrics loop started
+2026-04-17 00:17:43 [32minfo[39m: Maintenance loop started
+2026-04-17 00:17:43 [32minfo[39m: ArbitrageBot started successfully
+2026-04-17 00:17:43 [32minfo[39m: Bot running — dashboard at http://localhost:3000
+2026-04-17 00:17:43 [32minfo[39m: Dashboard started
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 108, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x137d4bf6115c20512f217ec8679d6e46" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x137d4bf6115c20512f217ec8679d6e46' ],
+    id: 108,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 109, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xcb51f7a7ac0c5cd067ad700b15384fb1" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xcb51f7a7ac0c5cd067ad700b15384fb1' ],
+    id: 109,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 110, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xa12bf36579e07a94355900f69860e170" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xa12bf36579e07a94355900f69860e170' ],
+    id: 110,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 111, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x8016f268ea3823f58fbb2a3de284f62d" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x8016f268ea3823f58fbb2a3de284f62d' ],
+    id: 111,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 112, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xbbc7c365e4549c9ac2c29a663ab0f72c" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xbbc7c365e4549c9ac2c29a663ab0f72c' ],
+    id: 112,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 113, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x10c941139c428d3daa1c9a7360cb30f9" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x10c941139c428d3daa1c9a7360cb30f9' ],
+    id: 113,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+2026-04-17 00:18:46 [32minfo[39m: Daily summary calculated
+2026-04-17 00:18:46 [32minfo[39m: Daily statistics
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 144, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x137d4bf6115c20512f217ec8679d6e46" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x137d4bf6115c20512f217ec8679d6e46' ],
+    id: 144,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 145, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xcb51f7a7ac0c5cd067ad700b15384fb1" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xcb51f7a7ac0c5cd067ad700b15384fb1' ],
+    id: 145,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 146, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xa12bf36579e07a94355900f69860e170" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xa12bf36579e07a94355900f69860e170' ],
+    id: 146,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 147, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x8016f268ea3823f58fbb2a3de284f62d" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x8016f268ea3823f58fbb2a3de284f62d' ],
+    id: 147,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 148, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xbbc7c365e4549c9ac2c29a663ab0f72c" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xbbc7c365e4549c9ac2c29a663ab0f72c' ],
+    id: 148,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 149, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x10c941139c428d3daa1c9a7360cb30f9" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x10c941139c428d3daa1c9a7360cb30f9' ],
+    id: 149,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+2026-04-17 00:19:47 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:19:47 [32minfo[39m: Daily summary calculated
+2026-04-17 00:19:47 [32minfo[39m: Daily statistics
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 297, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x137d4bf6115c20512f217ec8679d6e46" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x137d4bf6115c20512f217ec8679d6e46' ],
+    id: 297,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 298, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xcb51f7a7ac0c5cd067ad700b15384fb1" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xcb51f7a7ac0c5cd067ad700b15384fb1' ],
+    id: 298,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 299, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xa12bf36579e07a94355900f69860e170" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xa12bf36579e07a94355900f69860e170' ],
+    id: 299,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 300, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x8016f268ea3823f58fbb2a3de284f62d" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x8016f268ea3823f58fbb2a3de284f62d' ],
+    id: 300,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 301, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xbbc7c365e4549c9ac2c29a663ab0f72c" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xbbc7c365e4549c9ac2c29a663ab0f72c' ],
+    id: 301,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 302, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x10c941139c428d3daa1c9a7360cb30f9" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x10c941139c428d3daa1c9a7360cb30f9' ],
+    id: 302,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 315, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x137d4bf6115c20512f217ec8679d6e46" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x137d4bf6115c20512f217ec8679d6e46' ],
+    id: 315,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 316, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xcb51f7a7ac0c5cd067ad700b15384fb1" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xcb51f7a7ac0c5cd067ad700b15384fb1' ],
+    id: 316,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 317, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xa12bf36579e07a94355900f69860e170" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xa12bf36579e07a94355900f69860e170' ],
+    id: 317,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 318, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x8016f268ea3823f58fbb2a3de284f62d" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x8016f268ea3823f58fbb2a3de284f62d' ],
+    id: 318,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 319, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xbbc7c365e4549c9ac2c29a663ab0f72c" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xbbc7c365e4549c9ac2c29a663ab0f72c' ],
+    id: 319,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 320, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x10c941139c428d3daa1c9a7360cb30f9" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x10c941139c428d3daa1c9a7360cb30f9' ],
+    id: 320,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 326, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xa12bf36579e07a94355900f69860e170" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xa12bf36579e07a94355900f69860e170' ],
+    id: 326,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 327, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0x8016f268ea3823f58fbb2a3de284f62d" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0x8016f268ea3823f58fbb2a3de284f62d' ],
+    id: 327,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+@TODO Error: could not coalesce error (error={ "code": -32602, "message": "filter not found" }, payload={ "id": 328, "jsonrpc": "2.0", "method": "eth_getFilterChanges", "params": [ "0xbbc7c365e4549c9ac2c29a663ab0f72c" ] }, code=UNKNOWN_ERROR, version=6.16.0)
+    at makeError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at JsonRpcProvider.getRpcError (/home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:749:41)
+    at /home/blockchain_/mev/arbitrage-bot-backend/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'UNKNOWN_ERROR',
+  error: { code: -32602, message: 'filter not found' },
+  payload: {
+    method: 'eth_getFilterChanges',
+    params: [ '0xbbc7c365e4549c9ac2c29a663ab0f72c' ],
+    id: 328,
+    jsonrpc: '2.0'
+  },
+  shortMessage: 'could not coalesce error'
+}
+2026-04-17 00:20:48 [32minfo[39m: Daily summary calculated
+2026-04-17 00:20:48 [32minfo[39m: Daily statistics
+2026-04-17 00:21:13 [32minfo[39m: Client connected
+2026-04-17 00:21:16 [32minfo[39m: Client disconnected
+2026-04-17 00:21:43 [32minfo[39m: Client connected
+2026-04-17 00:21:49 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:21:49 [32minfo[39m: Daily summary calculated
+2026-04-17 00:21:49 [32minfo[39m: Daily statistics
+2026-04-17 00:21:54 [32minfo[39m: Client connected
+2026-04-17 00:22:49 [32minfo[39m: Daily summary calculated
+2026-04-17 00:22:49 [32minfo[39m: Daily statistics
+2026-04-17 00:23:43 [32minfo[39m: Client connected
+2026-04-17 00:23:43 [32minfo[39m: Client disconnected
+2026-04-17 00:23:52 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:23:52 [32minfo[39m: Daily summary calculated
+2026-04-17 00:23:52 [32minfo[39m: Daily statistics
+2026-04-17 00:24:53 [32minfo[39m: Daily summary calculated
+2026-04-17 00:24:53 [32minfo[39m: Daily statistics
+2026-04-17 00:25:56 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:25:56 [32minfo[39m: Daily summary calculated
+2026-04-17 00:25:56 [32minfo[39m: Daily statistics
+2026-04-17 00:26:09 [32minfo[39m: SIGTERM received — shutting down
+2026-04-17 00:26:09 [32minfo[39m: Stopping ArbitrageBot…
+2026-04-17 00:26:09 [32minfo[39m: Event listener stopped
+2026-04-17 00:26:09 [32minfo[39m: Stopping PoolDiscoveryService...
+2026-04-17 00:26:09 [32minfo[39m: PoolDiscoveryService stopped
+2026-04-17 00:26:09 [32minfo[39m: VaultService: stopped
+2026-04-17 00:26:09 [32minfo[39m: ProfitTracker database closed
+2026-04-17 00:26:09 [32minfo[39m: ArbitrageBot stopped
+2026-04-17 00:26:22 [32minfo[39m: StorageService: Database initialised
+2026-04-17 00:26:22 [32minfo[39m: NotificationService: VAPID details set for Web Push
+2026-04-17 00:26:22 [32minfo[39m: PoolDiscoveryService initialized
+2026-04-17 00:26:22 [32minfo[39m: TransactionSubmitter initialized with valid signer
+2026-04-17 00:26:22 [32minfo[39m: Database schema initialized
+2026-04-17 00:26:22 [32minfo[39m: ProfitTracker initialized
+2026-04-17 00:26:22 [32minfo[39m: Express routes configured
+2026-04-17 00:26:22 [32minfo[39m: WebSocket handlers configured
+2026-04-17 00:26:22 [32minfo[39m: VaultService initialised
+2026-04-17 00:26:22 [32minfo[39m: ArbitrageBot initialised
+2026-04-17 00:26:22 [32minfo[39m: Starting ArbitrageBot…
+2026-04-17 00:26:22 [31merror[39m: Uncaught exception
+1776367582953 [32minfo[39m: Uncaught: Unexpected server response: 405
+2026-04-17 00:26:23 [32minfo[39m: Connected to network
+2026-04-17 00:26:24 [32minfo[39m: Starting monitoring for 0 pools
+2026-04-17 00:26:24 [32minfo[39m: Event listeners attached to all pools
+2026-04-17 00:26:24 [32minfo[39m: Starting PoolDiscoveryService...
+2026-04-17 00:26:24 [32minfo[39m: PoolDiscoveryService started successfully
+2026-04-17 00:26:24 [32minfo[39m: VaultService started
+2026-04-17 00:26:24 [32minfo[39m: Execution loop started
+2026-04-17 00:26:24 [32minfo[39m: Metrics loop started
+2026-04-17 00:26:24 [32minfo[39m: Maintenance loop started
+2026-04-17 00:26:24 [32minfo[39m: ArbitrageBot started successfully
+2026-04-17 00:26:24 [32minfo[39m: Bot running — dashboard at http://localhost:3000
+2026-04-17 00:26:24 [32minfo[39m: Dashboard started
+2026-04-17 00:26:27 [32minfo[39m: Client connected
+2026-04-17 00:26:28 [32minfo[39m: Client connected
+2026-04-17 00:27:27 [32minfo[39m: Daily summary calculated
+2026-04-17 00:27:27 [32minfo[39m: Daily statistics
+2026-04-17 00:28:27 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:28:27 [32minfo[39m: Daily summary calculated
+2026-04-17 00:28:27 [32minfo[39m: Daily statistics
+2026-04-17 00:29:30 [32minfo[39m: Daily summary calculated
+2026-04-17 00:29:30 [32minfo[39m: Daily statistics
+2026-04-17 00:30:33 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:30:33 [32minfo[39m: Daily summary calculated
+2026-04-17 00:30:33 [32minfo[39m: Daily statistics
+2026-04-17 00:31:34 [32minfo[39m: Daily summary calculated
+2026-04-17 00:31:34 [32minfo[39m: Daily statistics
+2026-04-17 00:32:36 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:32:36 [32minfo[39m: Daily summary calculated
+2026-04-17 00:32:36 [32minfo[39m: Daily statistics
+2026-04-17 00:33:38 [32minfo[39m: Daily summary calculated
+2026-04-17 00:33:38 [32minfo[39m: Daily statistics
+2026-04-17 00:34:39 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:34:39 [32minfo[39m: Daily summary calculated
+2026-04-17 00:34:39 [32minfo[39m: Daily statistics
+2026-04-17 00:35:42 [32minfo[39m: Daily summary calculated
+2026-04-17 00:35:42 [32minfo[39m: Daily statistics
+2026-04-17 00:36:45 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:36:45 [32minfo[39m: Daily summary calculated
+2026-04-17 00:36:45 [32minfo[39m: Daily statistics
+2026-04-17 00:37:46 [32minfo[39m: Daily summary calculated
+2026-04-17 00:37:46 [32minfo[39m: Daily statistics
+2026-04-17 00:38:49 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:38:49 [32minfo[39m: Daily summary calculated
+2026-04-17 00:38:49 [32minfo[39m: Daily statistics
+2026-04-17 00:39:52 [32minfo[39m: Daily summary calculated
+2026-04-17 00:39:52 [32minfo[39m: Daily statistics
+2026-04-17 00:40:55 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:40:55 [32minfo[39m: Daily summary calculated
+2026-04-17 00:40:55 [32minfo[39m: Daily statistics
+2026-04-17 00:41:56 [32minfo[39m: Daily summary calculated
+2026-04-17 00:41:56 [32minfo[39m: Daily statistics
+2026-04-17 00:42:59 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:42:59 [32minfo[39m: Daily summary calculated
+2026-04-17 00:42:59 [32minfo[39m: Daily statistics
+2026-04-17 00:44:02 [32minfo[39m: Daily summary calculated
+2026-04-17 00:44:02 [32minfo[39m: Daily statistics
+2026-04-17 00:45:02 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:45:02 [32minfo[39m: Daily summary calculated
+2026-04-17 00:45:02 [32minfo[39m: Daily statistics
+2026-04-17 00:46:03 [32minfo[39m: Daily summary calculated
+2026-04-17 00:46:03 [32minfo[39m: Daily statistics
+2026-04-17 00:47:04 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:47:04 [32minfo[39m: Daily summary calculated
+2026-04-17 00:47:04 [32minfo[39m: Daily statistics
+2026-04-17 00:48:08 [32minfo[39m: Daily summary calculated
+2026-04-17 00:48:08 [32minfo[39m: Daily statistics
+2026-04-17 00:49:11 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:49:11 [32minfo[39m: Daily summary calculated
+2026-04-17 00:49:11 [32minfo[39m: Daily statistics
+2026-04-17 00:50:12 [32minfo[39m: Daily summary calculated
+2026-04-17 00:50:12 [32minfo[39m: Daily statistics
+2026-04-17 00:51:13 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:51:13 [32minfo[39m: Daily summary calculated
+2026-04-17 00:51:13 [32minfo[39m: Daily statistics
+2026-04-17 00:52:14 [32minfo[39m: Daily summary calculated
+2026-04-17 00:52:14 [32minfo[39m: Daily statistics
+2026-04-17 00:53:15 [32minfo[39m: Starting pool discovery on DEX
+2026-04-17 00:53:15 [32minfo[39m: Daily summary calculated
+2026-04-17 00:53:15 [32minfo[39m: Daily statistics
+2026-04-17 00:53:51 [32minfo[39m: SIGTERM received — shutting down
+2026-04-17 00:53:51 [32minfo[39m: Stopping ArbitrageBot…
+2026-04-17 00:53:51 [32minfo[39m: Event listener stopped
+2026-04-17 00:53:51 [32minfo[39m: Stopping PoolDiscoveryService...
+2026-04-17 00:53:51 [32minfo[39m: PoolDiscoveryService stopped
+2026-04-17 00:53:51 [32minfo[39m: VaultService: stopped
+2026-04-17 00:53:51 [32minfo[39m: ProfitTracker database closed
+2026-04-17 00:53:51 [32minfo[39m: ArbitrageBot stopped
